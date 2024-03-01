@@ -1,34 +1,40 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useEffect } from 'react'
+import axios from 'axios'
+import { Card, CardContent, Container, Divider, Grid, Typography } from '@mui/material'
 
 function App() {
-  const [count, setCount] = useState(0)
+
+  const [joke, setJoke] = useState('No joke fetched yet')
+
+  useEffect(() => {
+    async function fetchData() {
+      const url = 'https://api.api-ninjas.com/v1/dadjokes'
+      const config = {
+        headers: {
+          'X-Api-Key': 'qFRwfcoEjiLRvRYhJirWtQ==1JTjQy3ah2MoAPgM'
+        }
+      }
+      const response = await axios.get(url, config)
+      const data = await response.data[0].joke
+      setJoke(data)
+    }
+    fetchData()
+  }, [])
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <Container>
+      <Grid container alignItems='center' justifyContent='center' spacing={0} direction='column'  style={{ minHeight: '100vh' }}>
+      <Card>
+        <Typography padding={3}>
+          Heres a dad joke for you:
+        </Typography>
+        <Divider/>
+        <CardContent>
+          {joke}
+        </CardContent>
+      </Card>
+      </Grid>
+    </Container>
   )
 }
 
